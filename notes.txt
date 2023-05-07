@@ -1,0 +1,235 @@
+NOTES FOR LittleLemonAPI
+UserIDs, Passwords, Tokens 
+
+****** DON'T FORGET TO BE LOGGED IN AS ADMIN FIRST WHEN TRYING TO ACCESS CERTAIN APIs *******
+
+Superuser/Admin 
+username : admin   
+password: admin123@   
+TOKEN : 14d07c1ec3411dd341be5201180830e8f85b932b
+
+Manager 
+username: mikeman
+password: manager123@   
+73e0fe4e465ec5e43fcf2e9870b293cedbd68767
+
+Customer 
+username: user1   
+password: cust123@
+a7f206b8dd057bfff56d700e6594e3fb7ae49230   
+
+Delivery Crew. 
+username: crew 
+password: delivery123@     
+cc5a064b8c066d8f7fd2a7304fee4c58f68bf8be
+_________________________
+
+http://127.0.0.1:8000/api/menu-items/ 
+Class based APIView Method and function based. 
+
+Djoser Username Creation,PW, and Token Creation. Can be done via insomnia and api. 
+http://127.0.0.1:8000/api/users/
+
+username: djoserCreate
+username: djoserpw123@
+"auth_token": 3c38744108e95c024233678149763310411f8af9
+
+http://127.0.0.1:8000/api/token/login
+
+MenuItems API 
+list, view, post update, 
+
+Filters: 
+Search and Order code implemented 
+search & order function for menu-items: 
+ordering_fields = ['price', 'title']
+filterset_fields = ['price', 'title']
+search_fields = ['title']
+
+Pagination = 3 items per page 
+
+Renderers: 
+text/html
+browsable 
+xml 
+json 
+csv 
+Yaml
+
+http://127.0.0.1:8000/api/menu-items/
+
+_____________________________
+
+JWT Installed
+
+installed apps and project level URLS to create tokens. 
+
+POST: Username and password will return Refresh and Access tokens. 
+
+http://127.0.0.1:8000/api/token/
+
+
+project level urls: 
+Visit Insomnia to produce refresh and access tokens. 
+path('api/token/',TokenObtainPairView.as_view(), name= 'token_obtain_pair'),
+path('api/token/refresh/',TokenRefreshView.as_view(), name='token_refresh'),
+path('api/token/blacklist/',TokenBlacklistView.as_view(), name = 'token blacklist'),
+
+______________________
+
+Unique Validator implemented. 
+Insomnia: POST Beef Pasta 
+
+{
+	"title": [
+		"This field must be unique."
+	]
+}
+
+--------
+
+djoser links
+/api/users method, post: createst a new user with name, email and password. 
+/api/api-token-auth/
+/api/users/users/ is userlist
+/api/user/ is self list. 
+
+To use djoser endpoints, you need to first be logged in as admin.
+http://127.0.0.1:8000/api/users/ contains userlist with extra actions.  
+
+<-------------------------------> 
+DJOSER
+/api/users Create a new User  POST
+/api/users/users/me/ - displays for anyone.   GET
+n/login/  anyone with valid username and PW, POST creates access tokens.
+
+API Endpoint Alterations(API Endpoints)
+Project Structure and API Enpoints: 
+
+http://127.0.0.1:8000/users/  
+POST Method Creates new user with email and password 
+
+http://127.0.0.1:8000/users/users/me/
+GET Method Displays only current user 
+
+http://127.0.0.1:8000/token/login
+POST Method Generates Access token for anyone with a Valid username and password 
+
+<--------------------------------------->
+
+Menu-Items Endpoints
+http://127.0.0.1:8000/api/menu-items/ manager,delivery-crew,customer GET 200OK
+
+Manager Access: 
+Manager Access Token: 73e0fe4e465ec5e43fcf2e9870b293cedbd68767
+api/orders/, api/orders/orderId, 
+requirements: Get, Assign, Filter
+
+ORDERS, 
+
+http://127.0.0.1:8000/api/orders/  
+
+http://127.0.0.1:8000/api/orders/orderId 
+
+http://127.0.0.1:8000/api/orders?status=delivered  
+
+http://127.0.0.1:8000/api/orders/?status=pending 
+
+Delivery Access 
+Delivery Access Token :cc5a064b8c066d8f7fd2a7304fee4c58f68bf8be
+/api/orders 
+/api/orders/orderId 
+http://127.0.0.1:8000/api/orders/  
+
+
+Customer Admin 
+
+Customers can register
+Customers can log in using their username and password and get access tokens 
+Customers can browse all categories 
+Customers can browse all the menu items at once =  api/menu-items
+Customers can browse menu items by category 
+Customers can paginate menu items
+Customers can sort menu items by price
+Customers can add menu items to the cart
+Customers can access previously added items in the cart
+Customers can place orders
+Customers can browse their own orders
+
+api/orders 
+
+/api/menu-items customer, delivery crew post/put/patch/delete, denies access and returns 403 -unauthorized status. 
+/api/menu-items/{menuItem} customer and delivery crew GET
+/api/menu-items customer, deliver crew, post,put, patch, delete returns 403 unauthorized 
+/api/menu-items/{menuItem} customer, delivery returns 403 -unauthorized. 
+
+
+Throttling: 
+http://127.0.0.1:8000/api/throttle-check-auth
+five calls per minute. 
+
+    'DEFAULT_THROTTLE_RATES': {
+        
+           'anon': '5/minute',
+           'user': '5/minute',
+
+HTTP 429 Too Many Requests
+Allow: OPTIONS, GET
+Content-Type: application/json
+Retry-After: 55
+Vary: Accept
+
+{
+    "detail": "Request was throttled. Expected available in 55 seconds."
+}
+
+    # #    
+
+
+/api/menu-items/     
+lists all menuitems GET
+/api/menu-items/{menuItem}
+id 27-31 
+
+Example: Use, id, 27, 28, 29, 30, 31. 
+
+ {
+        "id": 27
+        "title": "Beef Pasta",
+        "price": "15.00",
+        "featured": false,
+        "category": 1
+    },
+
+/api/menu-items/{menuItem} put/patch updates single item. 
+/api/menu-items/{menuItem} deletes menuItem
+
+Group Management 
+/api/groups/manager/users manager GET -Manager
+/api/groups/manage/users POST -Manager/
+/api/groups/manager/users/{userId}manager/delete/ 200-success, usernotfound =404 -Not found
+
+/api/groups/deliver-crew/users manager GET returns all delivery crew 
+/api/groups/delivery-crew/users POST returns 201-created 
+/api/groups/deliver-crew/{userId}DELETE 200 -success usernot found 404_notfound 
+
+cart Management
+/api/cart/menu-items customer (GET) returns current items for current user id for these cart items 
+/api/cart/menu-items POST
+/api/cart/menu-items/ customer Delete. deletes all menuItems creatued by the current token 
+
+
+Order managerment  api/orders/ customer GET returns all orders created by the users GET 
+/api orders customer POST
+/api/orders/{orderId} GET
+/api/orders/ manager GET Returns all orders with order items by all users. 
+
+/api/orders customer GET returns all orders by user 
+/api/orders POST creates a new order item for current user
+/api/orders/{orderId}, customer , GET returns all times  for orderID if not shows HTTP error status code. 
+
+GET /api/orders/ manager GET returns all orders with order items by all users. 
+/api/orders/{orderId} customer, put/patch, updates order, manager can set delivery crew to this order and update order status to 0 or 1. If delivery crew is assigned to the order the status = 0 meanse the order is out for delivery.if delivery crew is assigend to the this order and the status = 1 means the order has been delivered.  
+/api/orders/{orderId} manager,Delete
+/api/orders/ deliverycrew/ get, returns all orderss with order items assigned to delivery crew 
+/api/orders/{orderId}, delivery crew, patch, can user this endpoint to order status to 0 or 1 the delivery crew will not be able to update anything else. 
